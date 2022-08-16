@@ -224,25 +224,11 @@ int main(){
     while (true){
         Token t = lex.proxToken();
         if (t.nomeToken == ERRO || t.nomeToken == cifrao){
+            cout << t.toString() << endl;    
             break;
         }
         cout << t.toString() << endl;
     }
-    // char c = 0;
-    // while(c != '$'){
-    //     c = lex.proxChar();
-    //     printLex(lex, c);
-    // }
-
-    // int cont = 16;
-    // while(cont--){
-    //     printLex(lex, lex.proxChar());
-    // }
-
-    // Token novo_token = Token(beginCmd);
-    // cout << novo_token.toString() << endl;
-    
-    
 
     return 0;
 }
