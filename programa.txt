@@ -1,14 +1,5 @@
-programa IMPAR;
+programa PI;
     begin
-        int x;
-        char impar;
-
-        if (x = 3) then
-            begin
-                impar := 'T';
-            end
-        else
-            begin
-                impar := 'F';
-            end
+        float pi;
+        pi := 3.14;
     end

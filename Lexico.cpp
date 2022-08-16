@@ -2,9 +2,11 @@
 using namespace std;
 
 #include "Token.h"
-#include "regrasAutomato.h"
+#include "aux.h"
 
 #define BUFFER_MAX_TAM 16
+
+#define debug 0
 
 typedef struct Lex {
     FILE *arquivo;
@@ -57,6 +59,9 @@ typedef struct Lex {
     }
 
     void lookAhead(){
+        if (debug){
+            cout << "Look ahead: o ultimo char vai ser lido novamente" << endl;
+        }
         this->pos--;
     }
 
@@ -98,10 +103,15 @@ typedef struct Lex {
 
     Token proxToken(){
         this->estadoAtual = "INICIAL";
-        while(!this->ehFinal[this->estadoAtual]){
-            char c = this->proxChar();
-            
-            cout << "char lido: " << c << " [lin: " << this->linha << ", col: " << this->coluna << "]\n"; 
+        char c;
+        while(true){
+            if (!this->ehFinal[this->estadoAtual]){
+                c = this->proxChar();
+
+                if (debug){
+                    cout << "char lido: " << c << " [lin: " << this->linha << ", col: " << this->coluna << "]\n"; 
+                }
+            }
 
             if (c == '$'){
                 if (this->estadoAtual == "INICIAL"){
@@ -113,96 +123,564 @@ typedef struct Lex {
                 }
             }
 
-            this->estadoAtual = aplicaRegra(this->estadoAtual, c);
-            // cout << "chego no estado: " << this->estadoAtual << endl;
-            // cout << "eh final? " << this->ehFinal[this->estadoAtual] << endl;
-            
-            if (this->estadoAtual == "ERRO"){
-                cout << "[Erro]: caractere nao esperado \'" << c << "\' [lin: " << this->linha << ", col: " << this->coluna << "]\n";
-                exit(1);
-            }
-        }
-
-        if (ehFinal[this->estadoAtual]){
-            if (this->estadoAtual == "M"){
+            //####################### REGRAS AUTOMATO ##############################
+            if (estadoAtual == "INICIAL"){
+                if (c == 'b'){
+                    estadoAtual = "B";
+                }
+                else if (c == 'c'){
+                    estadoAtual = "C";
+                }
+                else if (c == 'd'){
+                    estadoAtual = "D";
+                }
+                else if (c == 'e'){
+                    estadoAtual = "E";
+                }
+                else if (c == 'f'){
+                    estadoAtual = "F";
+                }
+                else if (c == 'i'){
+                    estadoAtual = "G";
+                }
+                else if (c == 'p'){
+                    estadoAtual = "H";
+                }
+                else if (c == 'r'){
+                    estadoAtual = "I";
+                }
+                else if (c == 't'){
+                    estadoAtual = "J";
+                }
+                else if (c == 'w'){
+                    estadoAtual = "K";
+                }
+                else if (ehLetra(c)){
+                    estadoAtual = "A";
+                }
+                else if (ehDigito(c)){
+                    estadoAtual = "L";
+                }
+                else if (c == '+'){
+                    estadoAtual = "M";
+                }
+                else if (c == '-'){
+                    estadoAtual = "N";
+                }
+                else if (c == '*'){
+                    estadoAtual = "O";
+                }
+                else if (c == '/'){
+                    estadoAtual = "P";
+                }
+                else if (c == '^'){
+                    estadoAtual = "Q";
+                }
+                else if (c == '<'){
+                    estadoAtual = "R";
+                }
+                else if (c == '>'){
+                    estadoAtual = "S";
+                }
+                else if (c == '='){
+                    estadoAtual = "T";
+                }
+                else if (c == '~'){
+                    estadoAtual = "U";
+                }
+                else if (c == ':'){
+                    estadoAtual = "V";
+                }
+                else if (c == ';'){
+                    estadoAtual = "W";
+                }
+                else if (c == ','){
+                    estadoAtual = "X";
+                }
+                else if (c == '('){
+                    estadoAtual = "Y";
+                }
+                else if (c == ')'){
+                    estadoAtual = "Z";
+                }
+                else if (c == '\''){
+                    estadoAtual = "AA";
+                }
+                else if (c == '['){
+                    estadoAtual = "CJ";
+                }
+                else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "B"){
+                if (c == 'e'){
+                    estadoAtual = "AD";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "C"){
+                if (c == 'h'){
+                    estadoAtual = "AE";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "D"){
+                if (c == 'o'){
+                    estadoAtual = "AF";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "E"){
+                if (c == 'n'){
+                    estadoAtual = "AG";
+                }else if (c == 'l'){
+                    estadoAtual = "AH";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "F"){
+                if (c == 'l'){
+                    estadoAtual = "AI";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "G"){
+                if (c == 'n'){
+                    estadoAtual = "AJ";
+                }else if (c == 'f'){
+                    estadoAtual = "AK";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "H"){
+                if (c == 'r'){
+                    estadoAtual = "AL";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "I"){
+                if (c == 'e'){
+                    estadoAtual = "AM";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "J"){
+                if (c == 'h'){
+                    estadoAtual = "AN";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "K"){
+                if (c == 'h'){
+                    estadoAtual = "AO";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "A"){
+                if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "L"){
+                if (ehDigito(c)){
+                    estadoAtual = "L";
+                }else if(c == '.'){
+                    estadoAtual = "AQ";
+                }else{
+                    estadoAtual = "AR";
+                }
+            }else if (estadoAtual == "M"){
                 return Token(adi);
-            }else if (this->estadoAtual == "N"){
+            }else if (estadoAtual == "N"){
                 return Token(sub);
-            }else if (this->estadoAtual == "O"){
+            }else if (estadoAtual == "O"){
                 return Token(mul);
-            }else if (this->estadoAtual == "P"){
+            }else if (estadoAtual == "P"){
                 return Token(divi);
-            }else if (this->estadoAtual == "Q"){
+            }else if (estadoAtual == "Q"){
                 return Token(pot);
-            }else if (this->estadoAtual == "T"){
+            }else if (estadoAtual == "R"){
+                if (c == '='){
+                    estadoAtual = "AS";
+                }else {
+                    estadoAtual = "AT";
+                }
+            }else if (estadoAtual == "S"){
+                if (c == '='){
+                    estadoAtual = "AU";
+                }else {
+                    estadoAtual = "AV";
+                }
+            }else if (estadoAtual == "T"){
                 return Token(relop, 2);
-            }else if (this->estadoAtual == "W"){
+            }else if (estadoAtual == "U"){
+                if(c == '='){
+                    estadoAtual = "AW";
+                }else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "V"){
+                if(c == '='){
+                    estadoAtual = "AX";
+                }else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "W"){
                 return Token(pontoVirgula);
-            }else if (this->estadoAtual == "X"){
+            }else if (estadoAtual == "X"){
                 return Token(virgula);
-            }else if (this->estadoAtual == "Y"){
+            }else if (estadoAtual == "Y"){
                 return Token(abreParenteses);
-            }else if (this->estadoAtual == "Z"){
+            }else if (estadoAtual == "Z"){
                 return Token(fechaParenteses);
-            }else if (this->estadoAtual == "AC"){
+            }else if (estadoAtual == "AA"){
+                if (ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AY";
+                }else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "AB"){
+                if (ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AC"){
                 // TODO: USAR O ID NA TAB DE SIMBOLOS
                 lookAhead();
                 return Token(id, 99999);
-            }else if (this->estadoAtual == "AF"){
+            }else if (estadoAtual == "AD"){
+                if (c == 'g'){
+                    estadoAtual = "AZ";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AE"){
+                if (c == 'a'){
+                    estadoAtual = "BA";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AF"){
                 return Token(doCmd);
-            }else if (this->estadoAtual == "AK"){
+            }else if (estadoAtual == "AG"){
+                if (c == 'd'){
+                    estadoAtual = "BB";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AH"){
+                if (c == 's'){
+                    estadoAtual = "BC";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AI"){
+                if (c == 'o'){
+                    estadoAtual = "BD";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AJ"){
+                if (c == 't'){
+                    estadoAtual = "BE";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AK"){
                 return Token(ifCmd);
-            }else if (this->estadoAtual == "AR"){
+            }else if (estadoAtual == "AL"){
+                if (c == 'o'){
+                    estadoAtual = "BF";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AM"){
+                if (c == 'p'){
+                    estadoAtual = "BG";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AN"){
+                        if (c == 'e'){
+                    estadoAtual = "BH";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AO"){
+                if (c == 'i'){
+                    estadoAtual = "BI";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "AQ"){
+                if (ehDigito(c)){
+                    estadoAtual = "BJ";
+                }else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "AR"){
                 lookAhead();
                 return Token(constInt, 99999);
-            }else if (this->estadoAtual == "AS"){
+            }else if (estadoAtual == "AS"){
                 return Token(relop, 1);
-            }else if (this->estadoAtual == "AT"){
+            }else if (estadoAtual == "AT"){
                 lookAhead();
                 return Token(relop, 0);
-            }else if (this->estadoAtual == "AU"){
+            }else if (estadoAtual == "AU"){
                 return Token(relop, 5);
-            }else if (this->estadoAtual == "AV"){
+            }else if (estadoAtual == "AV"){
                 lookAhead();
                 return Token(relop, 4);
-            }else if (this->estadoAtual == "AW"){
+            }else if (estadoAtual == "AW"){
                 return Token(relop, 3);
-            }else if (this->estadoAtual == "AX"){
+            }else if (estadoAtual == "AX"){
                 return Token(atr);
-            }else if (this->estadoAtual == "BB"){
+            }else if (estadoAtual == "AY"){
+                if (c == '\''){
+                    estadoAtual = "BK";
+                }else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "AZ"){
+                if (c == 'i'){
+                    estadoAtual = "BL";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BA"){
+                if (c == 'r'){
+                    estadoAtual = "BM";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BB"){
                 return Token(endCmd);
-            }else if (this->estadoAtual == "BE"){
+            }else if (estadoAtual == "BC"){
+                if (c == 'e'){
+                    estadoAtual = "BN";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BD"){
+                if (c == 'a'){
+                    estadoAtual = "BO";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BE"){
                 return Token(tipoInt);
-            }else if (this->estadoAtual == "BK"){
+            }else if (estadoAtual == "BF"){
+                if (c == 'g'){
+                    estadoAtual = "BP";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BG"){
+                if (c == 'e'){
+                    estadoAtual = "BQ";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BH"){
+                if (c == 'n'){
+                    estadoAtual = "BR";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BI"){
+                if (c == 'l'){
+                    estadoAtual = "BS";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BJ"){
+                if (ehDigito(c)){
+                    estadoAtual = "BJ";
+                }else if (c == 'E'){
+                    estadoAtual = "BU";
+                }else{
+                    estadoAtual = "BV";
+                }
+            }else if (estadoAtual == "BK"){
                 return Token(constChar, 99999);
-            }else if (this->estadoAtual == "BM"){
+            }else if (estadoAtual == "BL"){
+                if (c == 'n'){
+                    estadoAtual = "BW";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BM"){
                 return Token(tipoChar);
-            }else if (this->estadoAtual == "BN"){
+            }else if (estadoAtual == "BN"){
                 return Token(elseCmd);
-            }else if (this->estadoAtual == "BR"){
+            }else if (estadoAtual == "BO"){
+                if (c == 't'){
+                    estadoAtual = "BX";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BP"){
+                if (c == 'r'){
+                    estadoAtual = "BY";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BQ"){
+                if (c == 'a'){
+                    estadoAtual = "BZ";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BR"){
                 return Token(thenCmd);
-            }else if (this->estadoAtual == "BV"){
+            }else if (estadoAtual == "BS"){
+                if (c == 'e'){
+                    estadoAtual = "CA";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BU"){
+                if (c == '-'){
+                    estadoAtual = "CB";
+                }else if (ehDigito(c)){
+                    estadoAtual = "CC";
+                }
+            }else if (estadoAtual == "BV"){
                 lookAhead();
                 return Token(constFloat, 99999);
-            }else if (this->estadoAtual == "BW"){
+            }else if (estadoAtual == "BW"){
                 return Token(beginCmd);
-            }else if (this->estadoAtual == "BX"){
+            }else if (estadoAtual == "BX"){
                 return Token(tipoFloat);
-            }else if (this->estadoAtual == "CA"){
+            }else if (estadoAtual == "BY"){
+                if (c == 'a'){
+                    estadoAtual = "CD";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "BZ"){
+                if (c == 't'){
+                    estadoAtual = "CE";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "CA"){
                 return Token(whileCmd);
-            }else if (this->estadoAtual == "CE"){
+            }else if (estadoAtual == "CB"){
+                if (ehDigito(c)){
+                    estadoAtual = "CC";
+                }else{
+                    estadoAtual = "ERRO";
+                }
+            }else if (estadoAtual == "CC"){
+                if (ehDigito(c)){
+                    estadoAtual = "CC";
+                }else{
+                    estadoAtual = "CG";
+                }
+            }else if (estadoAtual == "CD"){
+                if (c == 'm'){
+                    estadoAtual = "CH";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "CE"){
                 return Token(repeatCmd);
-            }else if (this->estadoAtual == "CG"){
+            }else if (estadoAtual == "CG"){
                 lookAhead();
                 return Token(constFloat, 99999);
-            }else if (this->estadoAtual == "CI"){
+            }else if (estadoAtual == "CH"){
+                if (c == 'a'){
+                    estadoAtual = "CI";
+                }else if(ehLetra(c) || ehDigito(c)){
+                    estadoAtual = "AB";
+                }else{
+                    estadoAtual = "AC";
+                }
+            }else if (estadoAtual == "CI"){
                 return Token(programa);
-            }else{
-                cout << "erro, alcancou estado final mas nao identificou qual" << endl;
+            }else if (estadoAtual == "CJ"){
+                if ( c == ']'){
+                    estadoAtual = "INICIAL";
+                }else{
+                    estadoAtual = "CJ";
+                }
             }
-        }
-        else{
-            cout << "erro, nao chegou em estado final" << endl;
+            // ############################### FIM REGRAS AUTOMATO ###########################
         }
 
         return Token(ERRO);
@@ -211,9 +689,6 @@ typedef struct Lex {
 } Lexer;
 
 
-void printLex(Lexer l, char c){
-    cout << "char lido: " << c << " [lin: " << l.linha << ", col: " << l.coluna << "]\n"; 
-}
 
 int main(){
     
