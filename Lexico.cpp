@@ -377,7 +377,6 @@ typedef struct Lex {
                     estadoAtual = "AC";
                 }
             }else if (estadoAtual == "AC"){
-                // TODO: USAR O ID NA TAB DE SIMBOLOS
                 lookAhead();
                 idAtual.pop_back();
                 Simbolo novoSimbolo = Simbolo(idAtual);
