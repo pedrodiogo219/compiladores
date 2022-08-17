@@ -105,6 +105,7 @@ typedef struct Lex {
         ehFinal["CE"] = true;
         ehFinal["CG"] = true;
         ehFinal["CI"] = true;
+        ehFinal["ERRO"] = true;
     }
 
     Token proxToken(){
@@ -699,9 +700,13 @@ typedef struct Lex {
             }else if (estadoAtual == "CJ"){
                 if ( c == ']'){
                     estadoAtual = "INICIAL";
+                    idAtual = "";
                 }else{
                     estadoAtual = "CJ";
                 }
+            }else if (estadoAtual == "ERRO"){
+                cout << "ERRO caractere inesperado: \'" << c << "\' pos: [lin: " << this->linha << ", col: " << this->coluna << "]\n";
+                return Token(ERRO);
             }
             // ############################### FIM REGRAS AUTOMATO ###########################
         }
