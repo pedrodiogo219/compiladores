@@ -2,7 +2,10 @@
 using namespace std;
 
 #include "Token.h"
+
 #include "aux.h"
+
+#include "Simbolos.h"
 
 #define BUFFER_MAX_TAM 16
 
@@ -10,6 +13,7 @@ using namespace std;
 
 typedef struct Lex {
     FILE *arquivo;
+    TabelaSimbolos * T;
     int linha;
     int coluna;
     int pos;
@@ -19,8 +23,10 @@ typedef struct Lex {
 
     unordered_map<string, bool> ehFinal;
     
-    Lex(FILE * a){
+    Lex(FILE * a, TabelaSimbolos * T){
         this->arquivo = a;
+        this->T = T;
+
         this->linha = 1;
         this->coluna = 0;
         this->pos = 0;
@@ -104,10 +110,13 @@ typedef struct Lex {
     Token proxToken(){
         this->estadoAtual = "INICIAL";
         char c;
+
+        string idAtual = "";
+
         while(true){
             if (!this->ehFinal[this->estadoAtual]){
                 c = this->proxChar();
-
+                idAtual += c;
                 if (debug){
                     cout << "char lido: " << c << " [lin: " << this->linha << ", col: " << this->coluna << "]\n"; 
                 }
@@ -369,7 +378,10 @@ typedef struct Lex {
             }else if (estadoAtual == "AC"){
                 // TODO: USAR O ID NA TAB DE SIMBOLOS
                 lookAhead();
-                return Token(id, 99999);
+                idAtual.pop_back();
+                Simbolo novoSimbolo = Simbolo(idAtual);
+                int pos = this->T->insereSimbolo(novoSimbolo);
+                return Token(id, pos);
             }else if (estadoAtual == "AD"){
                 if (c == 'g'){
                     estadoAtual = "AZ";
@@ -462,7 +474,10 @@ typedef struct Lex {
                 }
             }else if (estadoAtual == "AR"){
                 lookAhead();
-                return Token(constInt, 99999);
+                idAtual.pop_back();
+                Simbolo novoSimbolo = Simbolo(SimbInt, "constInt", stringToInt(idAtual));
+                int pos = this->T->insereSimbolo(novoSimbolo);
+                return Token(constInt, pos);
             }else if (estadoAtual == "AS"){
                 return Token(relop, 1);
             }else if (estadoAtual == "AT"){
@@ -560,7 +575,9 @@ typedef struct Lex {
                     estadoAtual = "BV";
                 }
             }else if (estadoAtual == "BK"){
-                return Token(constChar, 99999);
+                Simbolo novoSimbolo = Simbolo(SimbChar, "constChar", stringToChar(idAtual));
+                int pos = this->T->insereSimbolo(novoSimbolo);
+                return Token(constChar, pos);
             }else if (estadoAtual == "BL"){
                 if (c == 'n'){
                     estadoAtual = "BW";
@@ -615,7 +632,10 @@ typedef struct Lex {
                 }
             }else if (estadoAtual == "BV"){
                 lookAhead();
-                return Token(constFloat, 99999);
+                idAtual.pop_back();
+                Simbolo novoSimbolo = Simbolo(SimbFloat, "constFloat", stringToFloat(idAtual));
+                int pos = this->T->insereSimbolo(novoSimbolo);
+                return Token(constFloat, pos);
             }else if (estadoAtual == "BW"){
                 return Token(beginCmd);
             }else if (estadoAtual == "BX"){
@@ -662,7 +682,10 @@ typedef struct Lex {
                 return Token(repeatCmd);
             }else if (estadoAtual == "CG"){
                 lookAhead();
-                return Token(constFloat, 99999);
+                idAtual.pop_back();
+                Simbolo novoSimbolo = Simbolo(SimbFloat, "constFloat", stringToFloat(idAtual));
+                int pos = this->T->insereSimbolo(novoSimbolo);
+                return Token(constFloat, pos);
             }else if (estadoAtual == "CH"){
                 if (c == 'a'){
                     estadoAtual = "CI";
@@ -692,18 +715,40 @@ typedef struct Lex {
 
 int main(){
     
+    TabelaSimbolos T = TabelaSimbolos();
     FILE *arquivo = fopen("programa.txt", "r");
-    Lexer lex = Lexer(arquivo);
+    Lexer lex = Lexer(arquivo, &T);
 
 
     while (true){
         Token t = lex.proxToken();
         if (t.nomeToken == ERRO || t.nomeToken == cifrao){
-            cout << t.toString() << endl;    
+            cout << t.toString() << endl;
             break;
         }
-        cout << t.toString() << endl;
+        
+        cout << t.toString();
+        if (debug && t.nomeToken == id){
+            cout << "    id: " << T.v[t.arg].id;
+        }
+        cout << endl;
     }
+
+    
+
+    // Simbolo s1 = Simbolo(SimbInt, "X", 11);
+    // Simbolo s2 = Simbolo(SimbInt, "Y", 12);
+    // Simbolo s3 = Simbolo(SimbInt, "Z", 13);
+    // Simbolo s4 = Simbolo(SimbInt, "X", 99);
+
+
+    // T.insereSimbolo(s1);
+    // T.insereSimbolo(s2);
+    // T.insereSimbolo(s3);
+    // T.insereSimbolo(s4);
+
+    T.mostraTabela();
+
 
     return 0;
 }

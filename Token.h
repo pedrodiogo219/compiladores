@@ -2,7 +2,7 @@
 #ifndef TOKEN
 #define TOKEN
 
-typedef enum {
+typedef enum{
     programa,
     id,
     constInt,
