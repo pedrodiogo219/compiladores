@@ -1,0 +1,18 @@
+programa PI;
+    begin
+
+        if ( teste < (2+9*7) ) then
+            begin
+                int a1,aa1,aaa1;
+                char b1;
+                float c1;
+                a1 := 2 + 9;
+                aa1 := 5 + a1;
+            end
+        else
+            begin
+                int a2;
+                char b2;
+                float c2;
+            end
+    end

@@ -1,7 +1,8 @@
 #ifndef SIMBOLOS
 #define SIMBOLOS
 
-typedef enum {
+typedef enum
+{
     SimbInt,
     SimbChar,
     SimbFloat,
@@ -12,74 +13,85 @@ string nomesTipoSimbolo[] = {
     "SimbInt",
     "SimbChar",
     "SimbFloat",
-    "SimbUndef"
-};
+    "SimbUndef"};
 
-typedef struct Simb{
+typedef struct Simb
+{
 
     tipoSimbolo tipo;
     string id;
 
-    void * valor = nullptr;
+    void *valor = nullptr;
 
-    Simb(){}
+    Simb() {}
 
-    Simb(string i){
+    Simb(tipoSimbolo t, string i, int v)
+    {
+        this->tipo = t;
+        this->id = i;
+        valor = (int *)malloc(sizeof(int));
+        if (valor)
+        {
+            *((int *)valor) = v;
+        }
+    }
+
+    Simb(string i)
+    {
         this->tipo = SimbUndef;
         this->id = i;
     }
 
-    Simb(tipoSimbolo t, string i){
+    Simb(tipoSimbolo t, string i)
+    {
         this->tipo = t;
         this->id = i;
     }
 
-    Simb(tipoSimbolo t, string i, int v){
+    Simb(tipoSimbolo t, string i, char v)
+    {
         this->tipo = t;
         this->id = i;
 
-        valor = (int*) malloc(sizeof(int));
-        if (valor){
-            *((int*)valor) = v;
+        valor = (char *)malloc(sizeof(char));
+        if (valor)
+        {
+            *((char *)valor) = v;
         }
     }
 
-    Simb(tipoSimbolo t, string i, char v){
+    Simb(tipoSimbolo t, string i, double v)
+    {
         this->tipo = t;
         this->id = i;
 
-        valor = (char*) malloc(sizeof(char));
-        if (valor){
-            *((char*)valor) = v;
+        valor = (double *)malloc(sizeof(double));
+        if (valor)
+        {
+            *((double *)valor) = v;
         }
     }
 
-    Simb(tipoSimbolo t, string i, double v){
-        this->tipo = t;
-        this->id = i;
-
-        valor = (double*) malloc(sizeof(double));
-        if (valor){
-            *((double*)valor) = v;
-        }
-    }
-
-
-    string toString(){
-        if (!this->valor){
+    string toString()
+    {
+        if (!this->valor)
+        {
             return "simbolo[id=" + this->id + ", tipo=" + nomesTipoSimbolo[this->tipo] + "]";
         }
         stringstream ss;
-        if (this->tipo == SimbInt){
-            int auxI = *((int*)this->valor);
+        if (this->tipo == SimbInt)
+        {
+            int auxI = *((int *)this->valor);
             ss << auxI;
         }
-        else if (this->tipo == SimbChar){
-            char auxC = *((char*)this->valor);
+        else if (this->tipo == SimbChar)
+        {
+            char auxC = *((char *)this->valor);
             ss << auxC;
         }
-        else if (this->tipo == SimbFloat){
-            double auxD = *((double*)this->valor);
+        else if (this->tipo == SimbFloat)
+        {
+            double auxD = *((double *)this->valor);
             ss << auxD;
         }
 
@@ -89,29 +101,31 @@ typedef struct Simb{
         return "simbolo[id=" + this->id + ", tipo=" + nomesTipoSimbolo[this->tipo] + ", valor=" + val + "]";
     }
 
-}Simbolo;
+} Simbolo;
 
+typedef struct tab
+{
 
-typedef struct tab{
-    
     unordered_map<string, int> posicaoSimbolo;
     vector<Simbolo> v;
     int cont = 1;
-    
-    tab(){
+
+    tab()
+    {
         // preenche a primeira posicao com um simbolo vazio
         v.push_back(Simbolo());
     }
 
-
-
-    int insereSimbolo(Simbolo s){
+    int insereSimbolo(Simbolo s)
+    {
         int posicao = posicaoSimbolo[s.id];
 
-        if (posicao != 0){
-           v[posicaoSimbolo[s.id]] = s;
+        if (posicao != 0)
+        {
+            v[posicaoSimbolo[s.id]] = s;
         }
-        else{
+        else
+        {
             posicao = cont++;
             posicaoSimbolo[s.id] = posicao;
             v.push_back(s);
@@ -120,12 +134,14 @@ typedef struct tab{
         return posicao;
     }
 
-    void mostraTabela(){
+    void mostraTabela()
+    {
         cout << "###### tabela de simbolos ############" << endl;
-        for (int i = 1; i < cont; i++){
+        for (int i = 1; i < cont; i++)
+        {
             cout << "pos: " << i << "\t " << v[i].toString() << endl;
         }
     }
-}TabelaSimbolos;
+} TabelaSimbolos;
 
-#endif //SIMBOLOS
+#endif // SIMBOLOS

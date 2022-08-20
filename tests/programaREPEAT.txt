@@ -1,0 +1,25 @@
+programa IMPAR;
+    begin
+
+        [ COMENTARIO 
+          DE 2 LINHAS
+        ]
+        int x,y;
+        x := 10;
+        y:=1;
+        repeat
+            begin
+                if ( x <  ) then
+                    begin
+                        x := x^2;
+                        x := x + 1;
+                    end
+                else
+                    begin
+                        x := x-2;
+                        x := x * 3;
+                    end
+            end
+        while ( y <= 10 )
+
+    end

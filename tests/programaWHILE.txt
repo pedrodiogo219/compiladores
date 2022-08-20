@@ -1,0 +1,21 @@
+programa IMPAR;
+    begin
+        int x,y;
+        while ( x < (5+5)) do
+            begin
+                
+                y := y + x;
+
+                if ( x <= 2) then
+                    begin
+                        x := 10;
+                    end
+                else
+                    begin
+                    end
+
+                y := y/2;
+
+            end
+
+    end

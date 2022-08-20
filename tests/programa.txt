@@ -1,0 +1,9 @@
+programa PI;
+    begin
+
+        int x;
+        float y
+
+        x := 1;
+        y := 2.1;
+    end
